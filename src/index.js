@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { connect, Provider } from 'react-redux';
 
 import { createStore, combineReducers } from 'redux';
-import { reducer as formReducer } from 'redux-form';
+import { reducer as formReducer, Field, reduxForm } from 'redux-form';
 
 
 const store = createStore(combineReducers({
@@ -10,9 +11,23 @@ const store = createStore(combineReducers({
 }));
 
 
-const Component = (props) => {
-  return <div>Hello World</div>;
-}
+const Component = connect(props => ({
+  initialValues: {
+    somefield: 'test',
+  },
+}))(reduxForm({
+  form: 'someform',
+})((props) => {
+  return (
+    <form>
+      <Field component='input' name='somefield' />
+    </form>
+  );
+}));
 
 
-ReactDOM.render(<Component />, document.body);
+ReactDOM.render((
+  <Provider store={store}>
+    <Component />
+  </Provider>
+), document.body);
